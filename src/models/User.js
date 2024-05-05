@@ -7,8 +7,8 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       validate: (pass) => {
-        if (!pass?.lenght || pass.lenght < 5) {
-          new Error("password shall be at least 5 characters");
+        if (!pass?.length || pass.length < 5) {
+          throw new Error("password shall be at least 5 characters");
         }
       },
     },
