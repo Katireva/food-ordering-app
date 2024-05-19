@@ -33,9 +33,14 @@ const handler = NextAuth({
         const email = credentials?.email;
         const password = credentials?.password;
 
+        console.log("credentials ", credentials);
+        console.log("EMAIL ", email, "PASS => ", password);
+
         mongoose.connect(process.env.MONGO_URL);
         const user = await User.findOne({ email });
         const passwordOK = user && bcrypt.compareSync(password, user.password);
+
+        console.log({ passwordOK, user });
 
         if (passwordOK) {
           return user;
@@ -45,6 +50,10 @@ const handler = NextAuth({
       },
     }),
   ],
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
 });
 
 export { handler as GET, handler as POST };
