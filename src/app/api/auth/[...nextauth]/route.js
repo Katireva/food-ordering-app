@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { User } from "@/models/User";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/libs/mongoConnect";
+import { User } from "@/models/User";
+
 // Load .env file
 dotenv.config({ path: "src/.env" });
 
-const handler = NextAuth({
+export const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
   providers: [
@@ -33,14 +34,9 @@ const handler = NextAuth({
         const email = credentials?.email;
         const password = credentials?.password;
 
-        console.log("credentials ", credentials);
-        console.log("EMAIL ", email, "PASS => ", password);
-
         mongoose.connect(process.env.MONGO_URL);
         const user = await User.findOne({ email });
         const passwordOK = user && bcrypt.compareSync(password, user.password);
-
-        console.log({ passwordOK, user });
 
         if (passwordOK) {
           return user;
@@ -54,6 +50,8 @@ const handler = NextAuth({
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
