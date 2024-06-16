@@ -165,7 +165,6 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                {" "}
                 <label>City</label>
                 <input
                   type="text"

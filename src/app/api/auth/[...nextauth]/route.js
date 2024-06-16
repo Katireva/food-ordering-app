@@ -8,6 +8,7 @@ import clientPromise from "@/libs/mongoConnect";
 import axios from "axios";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
+
 // Load .env file
 dotenv.config({ path: "src/.env" });
 
@@ -34,14 +35,9 @@ export const authOptions = {
         const email = credentials?.email;
         const password = credentials?.password;
 
-        console.log("credentials ", credentials);
-        console.log("EMAIL ", email, "PASS => ", password);
-
         mongoose.connect(process.env.MONGO_URL);
         const user = await User.findOne({ email });
         const passwordOK = user && bcrypt.compareSync(password, user.password);
-
-        console.log({ passwordOK, user });
 
         if (passwordOK) {
           return user;
