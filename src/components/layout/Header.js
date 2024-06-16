@@ -5,7 +5,8 @@ import Link from "next/link";
 
 export default function Header() {
   const session = useSession();
-  console.log(session);
+  console.log("SESSION => ", session);
+
   const status = session.status;
   const userData = session.data?.user;
   let userName = (userData && (userData.name || userData.email)) || "";
