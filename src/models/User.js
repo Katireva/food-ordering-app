@@ -1,5 +1,4 @@
 import { Schema, models, model } from "mongoose";
-import bcrypt from "bcrypt";
 
 const UserSchema = new Schema(
   {

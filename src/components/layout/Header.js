@@ -9,7 +9,8 @@ export default function Header() {
   const status = session.status;
   const userData = session.data?.user;
   let userName = (userData && (userData.name || userData.email)) || "";
-  console.log("userName ", userName);
+  console.log(userName);
+
   if (userName !== " " && userName.includes(" ")) {
     userName = userName.split(" ")[0];
   }

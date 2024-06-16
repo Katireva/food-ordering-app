@@ -12,7 +12,6 @@ export async function PUT(req) {
   mongoose.connect(process.env.MONGO_URL);
   const data = await req.json();
   const session = await getServerSession(authOptions);
-  console.log("session route", session);
   const email = session.user.email;
 
   //update user name
