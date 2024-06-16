@@ -2,15 +2,16 @@ import mongoose from "mongoose";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { User } from "@/models/User";
-import dotenv from "dotenv";
-import bcrypt from "bcrypt";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/libs/mongoConnect";
+import axios from "axios";
+import dotenv from "dotenv";
+import bcrypt from "bcrypt";
 // Load .env file
 dotenv.config({ path: "src/.env" });
 
-const handler = NextAuth({
+export const authOptions = {
   secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
   providers: [
@@ -45,6 +46,66 @@ const handler = NextAuth({
       },
     }),
   ],
-});
+  callbacks: {
+    async jwt({ token, user, account }) {
+      // Initial sign-in
+      if (account && user) {
+        return {
+          accessToken: account.access_token,
+          accessTokenExpires: Date.now() + account.expires_at * 1000,
+          refreshToken: account.refresh_token,
+          user,
+        };
+      }
+
+      // Return previous token if the access token has not expired yet
+      if (Date.now() < token.accessTokenExpires) {
+        return token;
+      }
+
+      // Access token has expired, try to update it
+      return refreshAccessToken(token);
+    },
+    async session({ session, token }) {
+      session.user = token.user;
+      session.accessToken = token.accessToken;
+      session.error = token.error;
+
+      return session;
+    },
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
+};
+
+export async function refreshAccessToken(token) {
+  try {
+    const response = await axios.post("https://your-auth-server.com/token", {
+      grant_type: "refresh_token",
+      refresh_token: token.refreshToken,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+    });
+
+    const refreshedTokens = response.data;
+
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
+    };
+  } catch (error) {
+    console.error("Error refreshing access token", error);
+    return {
+      ...token,
+      error: "RefreshAccessTokenError",
+    };
+  }
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
