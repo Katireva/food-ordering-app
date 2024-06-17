@@ -4303,6 +4303,11 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
+use-next-navigation-event@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/use-next-navigation-event/-/use-next-navigation-event-0.1.0.tgz#7e77a0267291ee9a99b644d186d2db698aecdad3"
+  integrity sha512-ji2ofK3GY8YFzgVGvyY26WffBg+48nSPYB0oNBZK0ltXOjxyhT8glr0D5tIp3Md5hPSyKMFWkaNUKZDuL51EnA==
+
 util-deprecate@^1.0.1, util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"

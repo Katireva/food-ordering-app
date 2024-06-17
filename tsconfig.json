@@ -2,10 +2,7 @@
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
     "paths": {
-      "@/*": ["./src/*"],
-      "@/app/*": ["./src/app/*"],
-      "@/models/*": ["./src/models/*"],
-      "@/components/*": ["./components/*"]
+      "@/*": ["./src/*"]
     },
     "allowJs": true,
     "skipLibCheck": true,

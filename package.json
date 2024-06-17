@@ -23,7 +23,8 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "uniqid": "^5.4.0",
-    "uniquid": "^1.1.4"
+    "uniquid": "^1.1.4",
+    "use-next-navigation-event": "^0.1.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
